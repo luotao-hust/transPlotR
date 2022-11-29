@@ -483,15 +483,16 @@ trancriptVis <- function(gtfFile = NULL,
    if (regin_color_flag == TRUE) {
     require(ggplot2)
     require(dplyr)
-    exon <- mutate(exon,regin_color = case_when(
-      type %in% c("five_prime_utr","three_prime_utr") ~ "UTR",
+    exon <- mutate(exon,regin = case_when(
+      type == "five_prime_utr" ~ "5' UTR",
+      type == "three_prime_utr" ~ "3' UTR",
       type == "CDS" ~ "CDS",
       TRUE ~ "exon"))
      p1 <- ggplot2::ggplot(exon) +
         ggplot2::geom_rect(ggplot2::aes_(xmin = ~start,xmax = ~end,
                                          ymin = ~ymin,ymax = ~ymax,
-                                         fill = ~regin_color)
-                           ) + scale_fill_manual(values=c("UTR" = "#CCCCCC", "CDS" = "#FF6633", "exon" = "#3333FF"))  
+                                         fill = ~regin)
+                           ) + scale_fill_manual(values=c("5' UTR" = "#FFFF00","3' UTR" = "#000000", "CDS" = "#33FF33", "exon" = "#3333FF"))  
   } else {
          p1 <- ggplot2::ggplot(exon) +
           ggplot2::geom_rect(ggplot2::aes_(xmin = ~start,xmax = ~end,
