@@ -197,7 +197,8 @@ trancriptVis <- function(gtfFile = NULL,
                          panel.spacing = 0.3,
                          revNegStrand = FALSE,
                          xAxis.info = TRUE,
-                         reverse.y = FALSE){
+                         reverse.y = FALSE,
+                         regin_color = FALSE){
   ##############################################################################
   # test whether with a given specific gene or region
 
@@ -483,7 +484,21 @@ trancriptVis <- function(gtfFile = NULL,
       ggplot2::geom_rect(ggplot2::aes_(xmin = ~start,xmax = ~end,
                                        ymin = ~ymin,ymax = ~ymax),
                          fill = exonFill)
-  }else{
+  } else if (regin_color == TRUE) {
+    require(ggplot2)
+    require(dplyr)
+    exon <- mutate(exon,regin_color = case_when(
+      type %in% c("five_prime_utr","three_prime_utr") ~ "UTR",
+      type == "CDS" ~ "CDS",
+      TRUE ~ "exon"))
+ 
+   p1 <- ggplot2::ggplot(exon) +
+      ggplot2::geom_rect(ggplot2::aes_(xmin = ~start,xmax = ~end,
+                                       ymin = ~ymin,ymax = ~ymax),
+                         fill = regin_color) + scale_fill_manual(values=c("UTR" = "#CCCCCC", "CDS" = "#FF6633", "exon" = "#3333FF"))
+    
+  }
+  else{
     p1 <- ggplot2::ggplot(exon) +
       ggplot2::geom_rect(ggplot2::aes_(xmin = ~start,xmax = ~end,
                                        ymin = ~ymin,ymax = ~ymax,
