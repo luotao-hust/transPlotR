@@ -198,7 +198,7 @@ trancriptVis <- function(gtfFile = NULL,
                          revNegStrand = FALSE,
                          xAxis.info = TRUE,
                          reverse.y = FALSE,
-                         regin_color = FALSE){
+                         regin_color_flag = FALSE){
   ##############################################################################
   # test whether with a given specific gene or region
 
@@ -480,7 +480,7 @@ trancriptVis <- function(gtfFile = NULL,
   ##############################################################################
   # first layer
   if(is.null(exonColorBy)){
-   if (regin_color == TRUE) {
+   if (regin_color_flag == TRUE) {
     require(ggplot2)
     require(dplyr)
     exon <- mutate(exon,regin_color = case_when(
@@ -489,8 +489,9 @@ trancriptVis <- function(gtfFile = NULL,
       TRUE ~ "exon"))
      p1 <- ggplot2::ggplot(exon) +
         ggplot2::geom_rect(ggplot2::aes_(xmin = ~start,xmax = ~end,
-                                         ymin = ~ymin,ymax = ~ymax),
-                           fill = regin_color) + scale_fill_manual(values=c("UTR" = "#CCCCCC", "CDS" = "#FF6633", "exon" = "#3333FF"))  
+                                         ymin = ~ymin,ymax = ~ymax,
+                                         fill = ~regin_color)
+                           ) + scale_fill_manual(values=c("UTR" = "#CCCCCC", "CDS" = "#FF6633", "exon" = "#3333FF"))  
   } else {
          p1 <- ggplot2::ggplot(exon) +
           ggplot2::geom_rect(ggplot2::aes_(xmin = ~start,xmax = ~end,
